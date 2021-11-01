@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-source "$(dirname "${BASH_SOURCE}")/helper.sh"
+source "kit/helper.sh"
 
 RELEASES=$(helper::config::list_releases)
 
@@ -24,14 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache workdir
+      - name: Cache
         uses: actions/cache@v2
         env:
-          cache-name: workdir
+          cache-name: src
         with:
           path: |
-            workdir
-            /tmp/kubernetes-lts/
+            src
           key: \${{ runner.os }}-build-\${{ env.cache-name }}
       - name: Install dependent
         run: |
@@ -42,6 +41,9 @@ jobs:
       - name: Verify patch format
         run: |
           make verify-patch-format
+      - name: Install etcd
+        run: |
+          ./hack/install_etcd.sh
 
 EOF
 
@@ -53,14 +55,13 @@ for release in ${RELEASES}; do
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache workdir
+      - name: Cache
         uses: actions/cache@v2
         env:
-          cache-name: workdir
+          cache-name: src
         with:
           path: |
-            workdir
-            /tmp/kubernetes-lts/
+            src
           key: \${{ runner.os }}-build-\${{ env.cache-name }}-${name}
           restore-keys: |
             \${{ runner.os }}-build-\${{ env.cache-name }}
@@ -79,14 +80,13 @@ for release in ${RELEASES}; do
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache workdir
+      - name: Cache
         uses: actions/cache@v2
         env:
-          cache-name: workdir
+          cache-name: src
         with:
           path: |
-            workdir
-            /tmp/kubernetes-lts/
+            src
           key: \${{ runner.os }}-build-\${{ env.cache-name }}-${name}
           restore-keys: |
             \${{ runner.os }}-build-\${{ env.cache-name }}
@@ -105,13 +105,13 @@ for release in ${RELEASES}; do
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache workdir
+      - name: Cache
         uses: actions/cache@v2
         env:
-          cache-name: workdir
+          cache-name: src
         with:
           path: |
-            workdir
+            src
             /tmp/kubernetes-lts/
           key: \${{ runner.os }}-build-\${{ env.cache-name }}-${name}
           restore-keys: |

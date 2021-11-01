@@ -5,41 +5,24 @@ v%:
 
 dependent:
 	pip3 install yq
-	./hack/git_init_workdir.sh
+	./hack/kit.sh
 
-.PHONY: build-client
-build-client:
-	@echo Build client
-	./hack/build_client.sh
+.PHONY: build-binaries
+build-binaries:
+	@echo Build binaries
+	./hack/build_binaries.sh
 
-.PHONY: build-server
-build-server:
-	@echo Build server
-	./hack/build_server.sh
+.PHONY: pkg-rpm
+pkg-rpm:
+	./hack/pkg_rpm.sh
 
-.PHONY: repos-init
-repos-init:
-	./hack/git_init_repos.sh
+.PHONY: pkg-deb
+pkg-deb:
+	./hack/pkg_deb.sh
 
 .PHONY: repos-sync
 repos-sync:
 	./hack/git_sync_repos.sh
-
-.PHONY: pkg-rpm-client
-pkg-rpm-client:
-	./hack/pkg_rpm_client.sh
-
-.PHONY: pkg-rpm-server
-pkg-rpm-server:
-	./hack/pkg_rpm_server.sh
-
-.PHONY: pkg-deb-client
-pkg-deb-client:
-	./hack/pkg_deb_client.sh
-
-.PHONY: pkg-deb-server
-pkg-deb-server:
-	./hack/pkg_deb_server.sh
 
 .PHONY: build-image
 build-image:
@@ -100,10 +83,6 @@ gen-verify-workflows:
 .PHONY: push-image
 push-image:
 	./hack/image_tag.sh && ./hack/image_manifest_push.sh
-
-.PHONY: format-all-patch
-format-all-patch:
-	./hack/format_all_patch.sh
 
 .PHONY: test
 test:
